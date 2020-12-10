@@ -1,19 +1,19 @@
 // Wait until the DOM has loaded before running the game
 // Get the button elements, and add event listeners to them
+
 document.addEventListener("DOMContentLoaded", function () {
     let buttons = document.getElementsByTagName("button");
 
     for (let button of buttons) {
-        button.addEventListener("click", function() {
+        button.addEventListener("click", function () {
             if (this.getAttribute("data-type") === "submit") {
-                alert("You clicked Submit!");
+              checkAnswer();
             } else {
                 let gameType = this.getAttribute("data-type");
                 runGame(gameType);
             }
         });
     }
-
     runGame("addition");
 });
 
@@ -21,7 +21,7 @@ function runGame(gameType) {
 
     // Creates two numbers with a value of between 1 and 25
 
-    let num1 = Math.floor(Math.random() * 25) + 1; 
+    let num1 = Math.floor(Math.random() * 25) + 1;
     let num2 = Math.floor(Math.random() * 25) + 1;
     
     // Selects and displays the question depending on the gameType
@@ -38,7 +38,22 @@ function runGame(gameType) {
 // Called when the user clicks the Submit button or presses Enter
 
 function checkAnswer() {
+    // Checks the answer against the first element in 
+    // the returned calculateCorrectAnser array
 
+    let userAnswer = parseInt(document.getElementById("answer-box").value);
+    let calculatedAnswer = calculateRightAnswer();
+    let isCorrect = userAnswer === calculatedAnswer[0];
+
+    if (isCorrect) {
+        alert("Hey! You got it right :D");
+        incrementScore();
+    } else {
+        alert(`Awwww... you answered ${userAnswer}. The correct answer was ${calculatedAnswer[0]}`);
+        incrementWrongAnswer();
+    }
+
+    runGame(calculatedAnswer[1]);
 }
 
 function calculateRightAnswer() {
@@ -59,11 +74,17 @@ function calculateRightAnswer() {
 }
 
 function incrementScore() {
+    // Gets the current score from the DOM and increments it
 
+    let oldScore = parseInt(document.getElementById("score").innerText);
+    document.getElementById("score").innerText = ++oldScore;
 }
 
 function incrementWrongAnswer() {
+    // Gets the current tally of incorrect answers from the DOM and increments it
 
+    let oldScore = parseInt(document.getElementById("incorrect").innerText);
+    document.getElementById("incorrect").innerText = ++oldScore;
 }
 
 // Displays the questions.
